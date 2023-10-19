@@ -20,7 +20,7 @@ http.get(url, (res) => {
     res.on('end', () => {
         const weatherData = JSON.parse(data);
         const { forecast } = weatherData;
-        let result = `Weather forecast in ${city} `
+        let result = `Weather forecast in ${city}`
         for (let element in forecast) {
             result += `${forecast[element].date}: mintemp: ${forecast[element].mintemp} maxtemp: ${forecast[element].maxtemp} `
         }
