@@ -1,0 +1,225 @@
+Задача 1:
+1. Загрузите образ busybox последней версии + 2. Запустите новый контейнер busybox с командой ping сайта netology.ru, и количеством пингов 7, поименуйте контейнер pinger
+lahmat@lahmat:~$ sudo  docker run --name pinger -it busybox ping netology.ru -c 7
+PING netology.ru (188.114.99.224): 56 data bytes
+64 bytes from 188.114.99.224: seq=0 ttl=55 time=29.776 ms
+64 bytes from 188.114.99.224: seq=1 ttl=55 time=49.889 ms
+64 bytes from 188.114.99.224: seq=2 ttl=55 time=30.918 ms
+64 bytes from 188.114.99.224: seq=3 ttl=55 time=31.426 ms
+64 bytes from 188.114.99.224: seq=4 ttl=55 time=28.924 ms
+64 bytes from 188.114.99.224: seq=5 ttl=55 time=55.463 ms
+64 bytes from 188.114.99.224: seq=6 ttl=55 time=30.326 ms
+
+--- netology.ru ping statistics ---
+7 packets transmitted, 7 packets received, 0% packet loss
+round-trip min/avg/max = 28.924/36.674/55.463 ms
+lahmat@lahmat:~$
+
+3.Выведите на список всех контейнеров - запущенных и остановленных
+lahmat@lahmat:~$ sudo docker ps -a
+[sudo] password for lahmat:
+CONTAINER ID   IMAGE     COMMAND                  CREATED        STATUS                    PORTS     NAMES
+b928dbaf2708   busybox   "ping netology.ru -c…"   19 hours ago   Exited (0) 19 hours ago             pinger
+lahmat@lahmat:~$ ^C
+
+4. Выведите на экран логи контейнера с именем pinger
+lahmat@lahmat:~$ sudo docker logs  pinger
+PING netology.ru (188.114.99.224): 56 data bytes
+64 bytes from 188.114.99.224: seq=0 ttl=55 time=29.776 ms
+64 bytes from 188.114.99.224: seq=1 ttl=55 time=49.889 ms
+64 bytes from 188.114.99.224: seq=2 ttl=55 time=30.918 ms
+64 bytes from 188.114.99.224: seq=3 ttl=55 time=31.426 ms
+64 bytes from 188.114.99.224: seq=4 ttl=55 time=28.924 ms
+64 bytes from 188.114.99.224: seq=5 ttl=55 time=55.463 ms
+64 bytes from 188.114.99.224: seq=6 ttl=55 time=30.326 ms
+
+--- netology.ru ping statistics ---
+7 packets transmitted, 7 packets received, 0% packet loss
+round-trip min/avg/max = 28.924/36.674/55.463 ms
+PING netology.ru (188.114.99.224): 56 data bytes
+64 bytes from 188.114.99.224: seq=0 ttl=57 time=34.017 ms
+64 bytes from 188.114.99.224: seq=1 ttl=57 time=39.499 ms
+64 bytes from 188.114.99.224: seq=2 ttl=57 time=34.523 ms
+64 bytes from 188.114.99.224: seq=3 ttl=57 time=62.093 ms
+64 bytes from 188.114.99.224: seq=4 ttl=57 time=38.508 ms
+64 bytes from 188.114.99.224: seq=5 ttl=57 time=34.703 ms
+64 bytes from 188.114.99.224: seq=6 ttl=57 time=38.697 ms
+
+--- netology.ru ping statistics ---
+7 packets transmitted, 7 packets received, 0% packet loss
+round-trip min/avg/max = 34.017/40.291/62.093 ms
+
+
+--- netology.ru ping statistics ---
+7 packets transmitted, 7 packets received, 0% packet loss
+round-trip min/avg/max = 34.017/40.291/62.093 ms
+
+5. Запустите второй раз контейнера с именем pinger
+lahmat@lahmat:~$ sudo docker start  pinger
+pinger
+
+6. Выведите на список всех контейнеров - запущенных и остановленных
+lahmat@lahmat:~$ sudo docker ps -a
+CONTAINER ID   IMAGE     COMMAND                  CREATED        STATUS                      PORTS     NAMES
+b928dbaf2708   busybox   "ping netology.ru -c…"   19 hours ago   Exited (0) 27 seconds ago             pinger
+lahmat@lahmat:~$
+
+7. Выведите на экран логи контейнера с именем pinger
+
+lahmat@lahmat:~$ sudo docker logs  pinger
+PING netology.ru (188.114.99.224): 56 data bytes
+64 bytes from 188.114.99.224: seq=0 ttl=55 time=29.776 ms
+64 bytes from 188.114.99.224: seq=1 ttl=55 time=49.889 ms
+64 bytes from 188.114.99.224: seq=2 ttl=55 time=30.918 ms
+64 bytes from 188.114.99.224: seq=3 ttl=55 time=31.426 ms
+64 bytes from 188.114.99.224: seq=4 ttl=55 time=28.924 ms
+64 bytes from 188.114.99.224: seq=5 ttl=55 time=55.463 ms
+64 bytes from 188.114.99.224: seq=6 ttl=55 time=30.326 ms
+
+--- netology.ru ping statistics ---
+7 packets transmitted, 7 packets received, 0% packet loss
+round-trip min/avg/max = 28.924/36.674/55.463 ms
+PING netology.ru (188.114.99.224): 56 data bytes
+64 bytes from 188.114.99.224: seq=0 ttl=57 time=34.017 ms
+64 bytes from 188.114.99.224: seq=1 ttl=57 time=39.499 ms
+64 bytes from 188.114.99.224: seq=2 ttl=57 time=34.523 ms
+64 bytes from 188.114.99.224: seq=3 ttl=57 time=62.093 ms
+64 bytes from 188.114.99.224: seq=4 ttl=57 time=38.508 ms
+64 bytes from 188.114.99.224: seq=5 ttl=57 time=34.703 ms
+64 bytes from 188.114.99.224: seq=6 ttl=57 time=38.697 ms
+
+--- netology.ru ping statistics ---
+7 packets transmitted, 7 packets received, 0% packet loss
+round-trip min/avg/max = 34.017/40.291/62.093 ms
+PING netology.ru (188.114.98.224): 56 data bytes
+64 bytes from 188.114.98.224: seq=0 ttl=57 time=37.513 ms
+64 bytes from 188.114.98.224: seq=1 ttl=57 time=33.418 ms
+64 bytes from 188.114.98.224: seq=2 ttl=57 time=47.730 ms
+64 bytes from 188.114.98.224: seq=3 ttl=57 time=34.790 ms
+64 bytes from 188.114.98.224: seq=4 ttl=57 time=35.052 ms
+64 bytes from 188.114.98.224: seq=5 ttl=57 time=39.552 ms
+64 bytes from 188.114.98.224: seq=6 ttl=57 time=60.874 ms
+
+--- netology.ru ping statistics ---
+7 packets transmitted, 7 packets received, 0% packet loss
+round-trip min/avg/max = 33.418/41.275/60.874 ms
+
+8. Определите по логам общее количество запусков команды ping и какое общее количество отправленых запросов
+3 раза запускался контейнер с командой ping c количеством оправленных запросов 21
+
+9. Удалите контейнер с именем pinger
+lahmat@lahmat:~$ sudo docker rm pinger
+pinger
+
+10.Удалите образ busybox
+lahmat@lahmat:~$ sudo docker rmi busybox
+Untagged: busybox:latest
+Untagged: busybox@sha256:3fbc632167424a6d997e74f52b878d7cc478225cffac6bc977eedfe51c7f4e79
+Deleted: sha256:a416a98b71e224a31ee99cff8e16063554498227d2b696152a9c3e0aa65e5824
+Deleted: sha256:3d24ee258efc3bfe4066a1a9fb83febf6dc0b1548dfe896161533668281c9f4f
+
+Задача 2:
+1. Загрузите образ node версии 15.14
+lahmat@lahmat:~$ sudo docker pull node:18.18
+18.18: Pulling from library/node
+8457fd5474e7: Pull complete
+13baa2029dde: Pull complete
+325c5bf4c2f2: Pull complete
+7e18a660069f: Pull complete
+c30e0acec6d5: Pull complete
+740b4cc8f44c: Pull complete
+a3c8fe9d0a3c: Pull complete
+d61a850b2d93: Pull complete
+Digest: sha256:7ce8b205d15e30fd395e5fa4000bcdf595fcff3f434fe75822e54e82a5f5cf82
+Status: Downloaded newer image for node:18.18
+docker.io/library/node:18.18
+
+2. Запустите контейнер node в интерактивном режиме подключения терминала, поименуйте его mynode, передайте две переменные среды NAME=<ваше имя> и SURNAME=<ваша фамилия>
+lahmat@lahmat:~$ sudo  docker run --name mynode -it -e NAME=maxim -e SURNAME=aksenov  node:18.18
+Welcome to Node.js v18.18.2.
+
+3. В интерактивной среде выполнения node выполните скрипт, который выведет на экран приветсвтие: Привет, <ваше имя> <ваша фамилия>!, эти данные должны быть получены из переменных среды
+> console.log('Привет,' + process.env.NAME + ' '  + process.env.SURNAME)
+Привет,maxim aksenov
+
+4.Остановите контейнер
+lahmat@lahmat:~$ sudo docker stop mynode
+mynode
+
+5. Удалите образ node версии 15.14
+lahmat@lahmat:~$ sudo docker rmi node:18.18
+Untagged: node:18.18
+Untagged: node@sha256:7ce8b205d15e30fd395e5fa4000bcdf595fcff3f434fe75822e54e82a5f5cf82
+Deleted: sha256:e1b0a66a57dc941a3d03d3bc859652fbc0084e553e202c996214e4b8edd82524
+Deleted: sha256:97303500859a46f5b15c975c6f181d5754998367eca6ce72a895123b13644020
+Deleted: sha256:4bfcde839f067f7b6b69161f95116f89053ab2a675500a67c321a997f8aafdd6
+Deleted: sha256:5f4713a3bb9ea5d7f885b7216c5070f2acbf97fb150e9d0208bda394eaaeb27e
+Deleted: sha256:3fff96745af52b8aa7ea17bc7d991b91d17a5db45798e9b28edeeb64bda3fe94
+Deleted: sha256:3566924ef9a897feb310bc57b61191de7497c17d96270a12f91dbf5909361b22
+Deleted: sha256:2441fd4ec536ca9f84235165c41c19d9a885334effa1691d53faed6a41cb1e13
+Deleted: sha256:184e5b465e6caa27c62d6bcf03e2c8198d276ea7aea0a0a7928858c3e07c5ca1
+Deleted: sha256:1777ac7d307bcbda4fe79323a921eda8d39d97513677ecda31b82244e7876520
+
+Задача 3. 
+1. Загрузите образ node версии 15.14
+lahmat@lahmat:~$ sudo docker pull node:18.18
+18.18: Pulling from library/node
+8457fd5474e7: Pull complete
+13baa2029dde: Pull complete
+325c5bf4c2f2: Pull complete
+7e18a660069f: Pull complete
+c30e0acec6d5: Pull complete
+740b4cc8f44c: Pull complete
+a3c8fe9d0a3c: Pull complete
+d61a850b2d93: Pull complete
+Digest: sha256:7ce8b205d15e30fd395e5fa4000bcdf595fcff3f434fe75822e54e82a5f5cf82
+Status: Downloaded newer image for node:18.18
+docker.io/library/node:18.18
+
+2. Запустите контейнер с именем first_node из образа node версии 15.14 в фоновом режиме, подключив папку data из текущей директории в /var/first/data контейнера
+lahmat@lahmat:~$ sudo docker run  --name first_node -it -v $(pwd)/data:/var/first/data node:18.18
+Welcome to Node.js v18.18.2.
+Type ".help" for more information.
+
+3. Запустите контейнер с именем second_node из образа node версии 15.14 в фоновом режиме, подключив папку data из текущей директории в /var/second/data контейнера
+lahmat@lahmat:~$ sudo docker run --name second_node -it -v ${pwd}:/data:/var/second/data node:18.18
+Welcome to Node.js v18.18.2.
+
+4.Подключитесь к контейнеру first_node с помощью exec и создайте текстовый файл любого содержания в /var/first/data
+
+lahmat@lahmat:~$ sudo docker exec first_node touch /var/first/data/text.txt
+[sudo] password for lahmat:
+lahmat@lahmat:~$ ls
+data  snap
+lahmat@lahmat:~$ cd data
+lahmat@lahmat:~/data$ ls
+text.txt
+
+5. Добавьте еще один файл в папку data на хостовой машине
+lahmat@lahmat:~/data$ touch text2.txt
+lahmat@lahmat:~/data$ ls
+text2.txt  text.txt
+
+6. Подключитесь к контейнеру second_node с помощью exec и получите список файлов в директории /var/second/data, выведете на экран содержимое файлов
+lahmat@lahmat:~/data$ sudo docker exec  second_node cd /var/first/data | ls
+text2.txt  text.txt
+
+7. Остановите оба контейнера 8. Удалите оба контейнера
+lahmat@lahmat:~$ sudo docker rm -f first_node
+first_node
+lahmat@lahmat:~$ sudo docker rm -f second_node
+second_node
+
+9.Удалите образ node версии 15.14
+lahmat@lahmat:~$ sudo docker rmi node:18.18
+Untagged: node:18.18
+Untagged: node@sha256:7ce8b205d15e30fd395e5fa4000bcdf595fcff3f434fe75822e54e82a5f5cf82
+Deleted: sha256:e1b0a66a57dc941a3d03d3bc859652fbc0084e553e202c996214e4b8edd82524
+Deleted: sha256:97303500859a46f5b15c975c6f181d5754998367eca6ce72a895123b13644020
+Deleted: sha256:4bfcde839f067f7b6b69161f95116f89053ab2a675500a67c321a997f8aafdd6
+Deleted: sha256:5f4713a3bb9ea5d7f885b7216c5070f2acbf97fb150e9d0208bda394eaaeb27e
+Deleted: sha256:3fff96745af52b8aa7ea17bc7d991b91d17a5db45798e9b28edeeb64bda3fe94
+Deleted: sha256:3566924ef9a897feb310bc57b61191de7497c17d96270a12f91dbf5909361b22
+Deleted: sha256:2441fd4ec536ca9f84235165c41c19d9a885334effa1691d53faed6a41cb1e13
+Deleted: sha256:184e5b465e6caa27c62d6bcf03e2c8198d276ea7aea0a0a7928858c3e07c5ca1
+Deleted: sha256:1777ac7d307bcbda4fe79323a921eda8d39d97513677ecda31b82244e7876520
