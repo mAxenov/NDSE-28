@@ -1,10 +1,14 @@
 const express = require("express");
+const path = require("path");
+const cors = require('cors');
 const userRoutes = require('./routes/userRoutes');
 const booksRoutes = require('./routes/booksRoutes');
 
 
-const app = express()
+const app = express();
 //app.use(express.json())
+app.use(cors());
+app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded());
 app.set("view engine", "ejs"); // Установите значение "ejs" в качестве шаблонизатора для express
 

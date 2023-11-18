@@ -4,6 +4,9 @@ const uploadBooks = require('../middleware/uploadBooks');
 const { v4: uuid } = require('uuid');
 const path = require('path');
 const fs = require('fs');
+const axios = require('axios');
+
+COUNTER_URL = process.env.COUNTER_URL;
 
 class Books {
     constructor(
@@ -63,16 +66,36 @@ router.get('/create', (req, res) => {
     });
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
     const { books } = store
     const { id } = req.params
     const idx = books.findIndex(el => el.id === id)
 
     if (idx !== -1) {
-        res.render("book/view", {
-            title: "Книга | просмотр",
-            book: books[idx],
-        });
+        // Отправка POST-запроса для увеличения счетчика
+        try {
+            await axios.post(`${COUNTER_URL}/counter/${id}/incr`);
+        } catch (error) {
+            console.error('Error incrementing counter:', error.message);
+            // Обработка ошибки, если не удалось увеличить счетчик
+        }
+
+        // Получение значения счетчика из Redis
+        try {
+            const response = await axios.get(`${COUNTER_URL}/counter/${id}`);
+            const counterValue = response.data.counterValue;
+
+            // Отображение страницы с информацией о книге и значением счетчика
+            res.render("book/view", {
+                title: "Книга | просмотр",
+                book: books[idx], // Передаем значение счетчика в шаблон
+                counterValue
+            });
+        } catch (error) {
+            console.error('Error getting counter value:', error.message);
+            // Обработка ошибки, если не удалось получить значение счетчика
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
     } else {
         res.status(404)
         res.json('404 | страница не найдена')
