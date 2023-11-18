@@ -15,12 +15,12 @@ db.books.insertMany([
   }
 ]);
 ```
-___
+
 ## Запрос для поиска полей документов коллекции books по полю title:
 ```
 db.books.find({ title: "Книга 1" }); 
 ```
-___
+
 ## Запрос для редактирования полей description и authors коллекции books по _id записи:
 ```
 db.books.updateOne(
