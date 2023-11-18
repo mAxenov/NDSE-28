@@ -18,7 +18,6 @@ const redisClient = redis.createClient({
 // Обработчик для увеличения счетчика
 app.post('/counter/:id/incr', async (req, res) => {
     const { id } = req.params;
-    console.log(id);
     // Увеличение счетчика в Redis
     try {
         const counterValue = await redisClient.incr(`counter:${id}`);
