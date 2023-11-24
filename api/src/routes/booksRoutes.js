@@ -5,21 +5,38 @@ const Books = require('../models/book');
 const path = require('path');
 const fs = require('fs');
 const axios = require('axios');
+const http = require('http');
+const socketIO = require('socket.io');
 
 COUNTER_URL = process.env.COUNTER_URL;
+
+// add this
+router.get('/socket.io/socket.io.js', (req, res) => {
+    res.sendFile('/app/node_modules/socket.io/client-dist/socket.io.js');
+});
 
 // Получение массива книг
 router.get('/', async (req, res) => {
     try {
         const books = await Books.find({}, '-__v');
-        res.json(books);
-        // res.render("book/index", {
-        //     title: "Книги",
-        //     books
-        // });
+        //res.json(books);
+        res.render("book/index", {
+            title: "Книги",
+            books
+        });
     } catch (error) {
         res.status(500).json('Internal Server Error');
     }
+});
+
+// необходимо для ejs в старых заданиях 
+router.get('/create', (req, res) => {
+    console.log('я тут')
+    res.render("book/create", {
+        title: "Книги | создать книгу",
+        book: {},
+        action: '/api/books'
+    });
 });
 
 // Получение книги по ID
@@ -27,7 +44,7 @@ router.get('/:id', async (req, res) => {
     const { id } = req.params;
     try {
         const book = await Books.findById(id, '-__v');
-
+        //console.log(book)
         if (book) {
             // Отправка POST-запроса для увеличения счетчика
             try {
@@ -43,12 +60,12 @@ router.get('/:id', async (req, res) => {
                 const counterValue = response.data.counterValue;
 
                 // Отображение страницы с информацией о книге и значением счетчика
-                // res.render("book/view", {
-                //     title: "Книга | просмотр",
-                //     book, // Передаем значение счетчика в шаблон
-                //     counterValue
-                // });
-                res.json(book);
+                res.render("book/view", {
+                    title: "Книга | просмотр",
+                    book, // Передаем значение счетчика в шаблон
+                    counterValue
+                });
+                //res.json(book);
             } catch (error) {
                 console.error('Error getting counter value:', error.message);
                 // Обработка ошибки, если не удалось получить значение счетчика
@@ -64,7 +81,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Обновление книги по ID
-router.put('/:id', async (req, res) => {
+router.post('/update/:id', async (req, res) => {
     try {
 
         const { title, description, authors, favorite, fileCover, fileName } = req.body;
@@ -80,8 +97,8 @@ router.put('/:id', async (req, res) => {
 
             await book.save();
 
-            res.json(book);
-            //res.redirect(`/api/books/${id}`);
+            //res.json(book);
+            res.redirect(`/api/books/${id}`);
         } else {
             res.status(404)
             res.redirect('/404');
@@ -114,8 +131,8 @@ router.post('/',
             const book = await newBook.save();
 
             res.status(201)
-            res.json(book);
-            //res.redirect('/api/books')
+            // res.json(book);
+            res.redirect('/api/books')
         } catch {
             res.status(500).json('Internal Server Error');
         }
@@ -139,14 +156,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 
-// необходимо для ejs в старых заданиях 
-router.get('/create', (req, res) => {
-    res.render("book/create", {
-        title: "Книги | создать книгу",
-        book: {},
-        action: '/api/books'
-    });
-});
+
 
 router.get('/:id/download', (req, res) => {
     const { books } = store
@@ -180,7 +190,7 @@ router.get('/update/:id', async (req, res) => {
             res.render("book/update", {
                 title: "Книга | изменить книгу",
                 book,
-                action: '/api/books',
+                action: `/api/books/update`,
             });
         } else {
             res.status(404)
@@ -192,4 +202,41 @@ router.get('/update/:id', async (req, res) => {
 });
 
 
-module.exports = router;
+const socketConnection = async (server) => {
+
+    const io = socketIO(server);
+
+    io.on('connection', (socket) => {
+        console.log('A user connected');
+        const { roomId } = socket.handshake.query;
+        socket.join(roomId);
+        socket.on('addComment', async (data) => {
+            try {
+                const { id, text, username } = data;
+
+                // Найти книгу по ID и добавить комментарий
+                const book = await Books.findById(id);
+                if (!book) {
+                    throw new Error('Book not found');
+                }
+
+                book.comments.push({ username, text });
+                await book.save();
+
+                // Отправить обновленную книгу всем подписанным клиентам
+                data.type = `room: ${roomId}`;
+                socket.to(roomId).emit('commentAdded', data);
+                socket.emit('commentAdded', data);
+            } catch (error) {
+                console.error('Error adding comment:', error);
+            }
+        });
+
+        socket.on('disconnect', () => {
+            console.log('A user disconnected');
+        });
+    });
+}
+
+
+module.exports = { router, socketConnection };

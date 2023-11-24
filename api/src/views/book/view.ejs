@@ -28,4 +28,76 @@
     </div>
 </div>
 
+<div class="row mt-5">
+    <div class="col-sm-8">
+        <h5>Комментарии</h5>
+    </div>
+    <div class="col-sm-8">
+        <form id="commentForm">
+            <div class="form-group">
+                <input
+                        placeholder="имя"
+                        type="text"
+                        id="username"
+                        class="form-control"
+                        required
+                >
+            </div>
+            <div class="form-group">
+                <textarea
+                        placeholder="текст комментария"
+                        class="form-control"
+                        id="text"
+                        required
+                ></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Оставить комментарий</button>
+        </form>
+
+    </div>
+
+    <div class="col-sm-8 mt-3" >
+        <div id="comments" class="list-group">
+        <% if(book.comments.length > 0) { %>
+                <% book.comments.reverse().map((comment) => { %>
+                        <%- include('./comment', {comment}) %>
+                <% }) %>
+        <% } else { %>
+            <!-- <div>
+                <span class="mt-5">Здесь пока нет ни одного комментария, вы можете стать первым!</span>
+            </div> -->
+        <% } %>
+        </div>
+    </div>
+</div>
+
+<script src="socket.io/socket.io.js"></script>
+<script>
+    const roomId = location.pathname.split('/').pop();
+    const socket = io('/', {query: `roomId=${roomId}`});
+
+     // Обработка события отправки комментария
+     document.getElementById('commentForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const text = document.getElementById('text').value;
+
+            // Отправка комментария на сервер
+            socket.emit('addComment', { id: '<%= book._id %>', username, text });
+        });
+
+    //Обработка события получения нового комментария
+    socket.on('commentAdded', (data) => {
+            // Отображение нового комментария на странице
+            const commentsList = document.getElementById('comments');
+            const comment = `<div class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <small>${data.username}</small>
+                            </div>
+                            <p class="mb-1">${data.text}</p>
+                        </div>`;
+            commentsList.insertAdjacentHTML('afterbegin', comment);
+        });
+</script>
+
 <%- include('../port/layout-end') %>

@@ -1,5 +1,10 @@
 const { Schema, model } = require('mongoose');
 
+const commentSchema = new Schema({
+    text: String,
+    username: String, // Имя пользователя кто оставил комментарий
+}, { timestamps: true });
+
 const bookSchema = new Schema({
     id: {
         type: "string",
@@ -23,7 +28,8 @@ const bookSchema = new Schema({
     },
     fileName: {
         type: "string"
-    }
+    },
+    comments: [commentSchema]
 });
 
 module.exports = model('Book', bookSchema);

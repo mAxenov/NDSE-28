@@ -30,7 +30,7 @@ services:
       - storage
 
   api:
-    image: maximeaxenoff960/homework2.7-api
+    image: maximeaxenoff960/homework2.9-api
     environment:
       - PORT=3000
       - COUNTER_URL=http://counter:3001
